@@ -7,6 +7,9 @@ const sequelize = require("./config/database");
 const User = require("./models/User");
 const Course = require("./models/Course");
 const Lesson = require("./models/Lesson");
+const Quiz = require("./models/Quiz");
+const Option = require("./models/Option");
+const UserProgress = require("./models/UserProgress");
 
 // 👇 Sync DB
 sequelize
