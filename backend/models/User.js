@@ -1,40 +1,50 @@
 // backend/models/User.js
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
+"use strict";
 
-const User = sequelize.define(
-  "User",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: false,
-      validate: {
-        isEmail: true,
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define(
+    "User",
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
+        validate: {
+          isEmail: true,
+        },
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      role: {
+        type: DataTypes.ENUM("student", "admin"),
+        defaultValue: "student",
       },
     },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    role: {
-      type: DataTypes.ENUM("student", "admin"),
-      defaultValue: "student",
-    },
-  },
-  {
-    tableName: "users",
-    timestamps: true,
-  }
-);
+    {
+      tableName: "users",
+      timestamps: true,
+    }
+  );
 
-module.exports = User;
+  // Define associations here
+  User.associate = (models) => {
+    User.belongsToMany(models.Course, { through: "UserCourses" });
+    User.hasMany(models.UserProgress, {
+      foreignKey: "userId",
+      onDelete: "CASCADE",
+    });
+  };
+
+  return User;
+};

@@ -2,18 +2,11 @@
 require("dotenv").config();
 const app = require("./app");
 const sequelize = require("./config/database");
+const db = require("./models"); // central access to all models and sequelize
 
-// 👇 Import models here
-const User = require("./models/User");
-const Course = require("./models/Course");
-const Lesson = require("./models/Lesson");
-const Quiz = require("./models/Quiz");
-const Option = require("./models/Option");
-const UserProgress = require("./models/UserProgress");
-
-// 👇 Sync DB
-sequelize
-  .sync({ alter: true }) // or use { force: true } during early dev to reset tables
+// 👇 Sync DB using central instance
+db.sequelize
+  .sync({ alter: true }) // or use { force: true } during development
   .then(() => {
     console.log("🛠 Tables synced successfully");
 
