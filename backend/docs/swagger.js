@@ -15,8 +15,22 @@ const options = {
         description: "Local server",
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
-  apis: ["./routes/*.js"], // Point to your route files for annotations
+  apis: ["./routes/*.js"], // Ensure your route files have proper Swagger JSDoc comments
 };
 
 const swaggerSpec = swaggerJSDoc(options);
