@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { protect, isAdmin } = require("../middlewares/authMiddleware");
 
 const {
   getAllCourses,
@@ -81,6 +82,6 @@ router.get("/:id", getCourseById);
  *         description: Invalid input
  */
 
-router.post("/", createCourse);
+router.post("/", protect, isAdmin, createCourse);
 
 module.exports = router;
