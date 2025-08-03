@@ -6,6 +6,9 @@ const {
   getMe,
 } = require("../controllers/authController");
 const { protect } = require("../middlewares/authMiddleware");
+const {
+  validateRegister,
+} = require("../middlewares/validateRegisterMiddleware");
 
 /**
  * @swagger
@@ -30,29 +33,24 @@ const { protect } = require("../middlewares/authMiddleware");
  *               - name
  *               - email
  *               - password
- *               - role
  *             properties:
  *               name:
  *                 type: string
  *                 example: John Doe
  *               email:
  *                 type: string
- *                 example: user@example.com
+ *                 example: john@example.com
  *               password:
  *                 type: string
- *                 example: password123
- *               role:
- *                 type: string
- *                 enum: [student, admin]
- *                 example: student
+ *                 example: secret123
  *     responses:
  *       201:
- *         description: User created
+ *         description: User registered successfully
  *       400:
- *         description: User already exists
+ *         description: Validation error
  */
 
-router.post("/register", registerUser);
+router.post("/register", validateRegister, registerUser);
 
 /**
  * @swagger
