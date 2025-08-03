@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   getAllCourses,
   getCourseById,
+  createCourse,
 } = require("../controllers/courseController");
 
 // Swagger tags definition for grouping (optional)
@@ -46,5 +47,40 @@ router.get("/", getAllCourses);
  *         description: Course not found
  */
 router.get("/:id", getCourseById);
+
+/**
+ * @swagger
+ * /courses:
+ *   post:
+ *     summary: Create a new course
+ *     tags: [Courses]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: JavaScript for Beginners
+ *               description:
+ *                 type: string
+ *                 example: Learn JavaScript from scratch.
+ *               status:
+ *                 type: string
+ *                 enum: [published, draft]
+ *                 example: published
+ *     responses:
+ *       201:
+ *         description: Course created successfully
+ *       400:
+ *         description: Invalid input
+ */
+
+router.post("/", createCourse);
 
 module.exports = router;
