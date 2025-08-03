@@ -31,3 +31,27 @@ exports.getCourseById = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Create a new course
+// @route   POST /api/courses
+// @access  Public (for now)
+// @swagger
+
+exports.createCourse = async (req, res, next) => {
+  try {
+    const { title, description, status } = req.body;
+    if (!title || !description) {
+      return res
+        .status(400)
+        .json({ message: "Title and description are required." });
+    }
+    const newCourse = await Course.create({
+      title,
+      description,
+      status: status || "draft", // Default to 'draft' if not provided
+    });
+    res.status(201).json(newCourse);
+  } catch (error) {
+    next(error);
+  }
+};
