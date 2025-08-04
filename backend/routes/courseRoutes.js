@@ -8,6 +8,7 @@ const {
   getCourseById,
   createCourse,
   updateCourse,
+  deleteCourse,
 } = require("../controllers/courseController");
 
 const validateRequest = require("../middlewares/validateRequest");
@@ -143,5 +144,26 @@ router.put(
   validateRequest,
   updateCourse
 );
+
+/**
+ * @swagger
+ * /courses/{id}:
+ *   delete:
+ *     summary: Delete a course by ID
+ *     tags: [Courses]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The course ID
+ *     responses:
+ *       200:
+ *         description: Course deleted successfully
+ *       404:
+ *         description: Course not found
+ */
+router.delete("/:id", protect, isAdmin, deleteCourse);
 
 module.exports = router;
