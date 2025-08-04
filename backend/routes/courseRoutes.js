@@ -2,12 +2,15 @@ const express = require("express");
 const router = express.Router();
 const { protect, isAdmin } = require("../middlewares/authMiddleware");
 const { validateCourse } = require("../middlewares/validateMiddleware");
-
+const { body, param } = require("express-validator");
 const {
   getAllCourses,
   getCourseById,
   createCourse,
+  updateCourse,
 } = require("../controllers/courseController");
+
+const validateRequest = require("../middlewares/validateRequest");
 
 // Swagger tags definition for grouping (optional)
 /**
@@ -84,5 +87,61 @@ router.get("/:id", getCourseById);
  */
 
 router.post("/", protect, isAdmin, validateCourse, createCourse);
+
+/**
+ * @swagger
+ * /courses/{id}:
+ *   put:
+ *     summary: Update a course by ID
+ *     tags: [Courses]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The course ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: Updated JS Course
+ *               description:
+ *                 type: string
+ *                 example: Updated course content
+ *               status:
+ *                 type: string
+ *                 enum: [published, draft]
+ *     responses:
+ *       200:
+ *         description: Course updated successfully
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Course not found
+ */
+
+router.put(
+  "/:id",
+  [
+    param("id").isInt().withMessage("Course ID must be an integer"),
+    body("title").optional().isString().withMessage("Title must be a string"),
+    body("description")
+      .optional()
+      .isString()
+      .withMessage("Description must be a string"),
+    body("status")
+      .optional()
+      .isIn(["published", "draft"])
+      .withMessage("Status must be either 'published' or 'draft'"),
+  ],
+  validateRequest,
+  updateCourse
+);
 
 module.exports = router;

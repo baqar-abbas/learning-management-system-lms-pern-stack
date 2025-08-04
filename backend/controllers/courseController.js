@@ -55,3 +55,32 @@ exports.createCourse = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Update a course
+// @route   POST /api/courses
+// @access  Public (for now)
+// @swagger
+
+exports.updateCourse = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, status } = req.body;
+
+    const course = await Course.findByPk(id);
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    console.log("Update body:", req.body);
+
+    course.title = title ?? course.title;
+    course.description = description ?? course.description;
+    course.status = status ?? course.status;
+
+    await course.save();
+    res.status(200).json({ message: "Course updated successfully", course });
+  } catch (error) {
+    console.error("Error updating course:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
