@@ -13,6 +13,9 @@ const {
 
 const validateRequest = require("../middlewares/validateRequest");
 
+// Import lesson routes
+const lessonRoutes = require("./lessonRoutes");
+
 // Swagger tags definition for grouping (optional)
 /**
  * @swagger
@@ -165,5 +168,8 @@ router.put(
  *         description: Course not found
  */
 router.delete("/:id", protect, isAdmin, deleteCourse);
+
+// Mount lesson routes (nested under courses)
+router.use("/:courseId/lessons", lessonRoutes);
 
 module.exports = router;
