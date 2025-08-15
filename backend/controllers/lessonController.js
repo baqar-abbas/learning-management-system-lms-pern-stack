@@ -1,5 +1,29 @@
 const { Lesson, Course } = require("../models");
 
+exports.getLessonsForCourse = async (req, res, next) => {
+  try {
+    const courseId = req.params.courseId;
+
+    // Ensure the course exists (optional but clearer errors)
+    const course = await Course.findByPk(courseId);
+    if (!course) {
+      return res.status(404).json({ message: "Course Not found" });
+    }
+
+    const lessons = await Lesson.findAll({
+      where: { courseId },
+      order: [
+        ["order", "ASC"],
+        ["id", "ASC"],
+      ],
+    });
+
+    res.status(201).json(lessons);
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.createLesson = async (req, res) => {
   try {
     const { courseId } = req.params;

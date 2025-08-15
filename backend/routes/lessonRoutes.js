@@ -1,9 +1,54 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 const { protect, isAdmin } = require("../middlewares/authMiddleware");
-const { createLesson } = require("../controllers/lessonController");
+const {
+  createLesson,
+  getLessonsForCourse,
+} = require("../controllers/lessonController");
 const { validateLesson } = require("../middlewares/validateLesson");
 const validateRequest = require("../middlewares/validateRequest");
+const { param } = require("express-validator");
+
+/**
+ * @swagger
+ * /courses/{courseId}/lessons:
+ *   get:
+ *     summary: Get all lessons for a course
+ *     tags: [Lessons]
+ *     parameters:
+ *       - in: path
+ *         name: courseId
+ *         required: true
+ *         description: ID of the course whose lessons you want to fetch
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: List of lessons for the course
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id: { type: integer, example: 3 }
+ *                   title: { type: string, example: "Intro to JS" }
+ *                   content: { type: string, example: "Basics of variables..." }
+ *                   order: { type: integer, example: 1 }
+ *                   courseId: { type: integer, example: 1 }
+ *                   createdAt: { type: string, format: date-time }
+ *                   updatedAt: { type: string, format: date-time }
+ *       404:
+ *         description: Course not found
+ */
+router.get(
+  "/",
+  [param("courseId").isInt().withMessage("courseId must be an integer")],
+  validateRequest,
+  getLessonsForCourse
+);
 
 /**
  * @swagger
