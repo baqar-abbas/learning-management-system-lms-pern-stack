@@ -19,6 +19,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      courseId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "courses", // table name for Course
+          key: "id",
+        },
+        onDelete: "CASCADE",
+      },
     },
     {
       tableName: "lessons",
@@ -26,7 +35,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  // Define associations
   Lesson.associate = (models) => {
     Lesson.belongsTo(models.Course, {
       foreignKey: "courseId",

@@ -1,7 +1,7 @@
 // middlewares/validateLesson.js
 const { body, param } = require("express-validator");
 
-exports.validateLessons = [
+exports.validateLesson = [
   param("courseId").isInt().withMessage("Course ID must be an integer"),
   body("title").notEmpty().isString().withMessage("Title is required"),
   body("content").notEmpty().withMessage("Content is Required"),
