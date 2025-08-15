@@ -4,6 +4,7 @@ const { protect, isAdmin } = require("../middlewares/authMiddleware");
 const {
   createLesson,
   getLessonsForCourse,
+  getLessonById,
 } = require("../controllers/lessonController");
 const { validateLesson } = require("../middlewares/validateLesson");
 const validateRequest = require("../middlewares/validateRequest");
@@ -49,6 +50,34 @@ router.get(
   validateRequest,
   getLessonsForCourse
 );
+
+/**
+ * @swagger
+ * /courses/{courseId}/lessons/{lessonId}:
+ *   get:
+ *     summary: Get a single lesson by ID
+ *     tags: [Lessons]
+ *     parameters:
+ *       - in: path
+ *         name: courseId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the course
+ *       - in: path
+ *         name: lessonId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the lesson
+ *     responses:
+ *       200:
+ *         description: Lesson data
+ *       404:
+ *         description: Lesson not found
+ */
+
+router.get("/:lessonId", getLessonById);
 
 /**
  * @swagger
