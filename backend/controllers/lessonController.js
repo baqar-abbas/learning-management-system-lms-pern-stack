@@ -24,6 +24,24 @@ exports.getLessonsForCourse = async (req, res, next) => {
   }
 };
 
+exports.getLessonById = async (req, res, next) => {
+  try {
+    const { courseId, lessonId } = req.params;
+
+    const lesson = await Lesson.findOne({
+      where: { id: lessonId, courseId },
+    });
+
+    if (!lesson) {
+      return res.status(404).json({ message: "Lesson not found" });
+    }
+
+    res.json(lesson);
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.createLesson = async (req, res) => {
   try {
     const { courseId } = req.params;
