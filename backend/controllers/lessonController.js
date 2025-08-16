@@ -70,3 +70,22 @@ exports.createLesson = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+exports.deleteLesson = async (req, res, next) => {
+  try {
+    const { courseId, lessonId } = req.params;
+
+    const lesson = await Lesson.findOne({
+      where: { id: lessonId, courseId },
+    });
+
+    if (!lesson) {
+      res.status(404).json({ message: "Lesson not found" });
+    }
+
+    await lesson.destroy();
+    res.status(200).json({ message: "Lesson deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
