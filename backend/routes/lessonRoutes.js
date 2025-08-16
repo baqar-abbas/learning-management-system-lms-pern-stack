@@ -5,6 +5,7 @@ const {
   createLesson,
   getLessonsForCourse,
   getLessonById,
+  deleteLesson,
 } = require("../controllers/lessonController");
 const { validateLesson } = require("../middlewares/validateLesson");
 const validateRequest = require("../middlewares/validateRequest");
@@ -133,5 +134,50 @@ router.post(
   validateRequest,
   createLesson
 );
+
+/**
+ * @swagger
+ * /courses/{courseId}/lessons/{lessonId}:
+ *   delete:
+ *     summary: Delete a lesson by ID
+ *     description: Only admins can delete a lesson. Provide the courseId and lessonId in the URL path.
+ *     tags: [Lessons]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: courseId
+ *         required: true
+ *         description: ID of the course that contains the lesson
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *       - in: path
+ *         name: lessonId
+ *         required: true
+ *         description: ID of the lesson to delete
+ *         schema:
+ *           type: integer
+ *           example: 2
+ *     responses:
+ *       200:
+ *         description: Lesson deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Lesson deleted successfully
+ *       404:
+ *         description: Lesson not found
+ *       401:
+ *         description: Unauthorized (if not logged in)
+ *       403:
+ *         description: Forbidden (if not an admin)
+ */
+
+router.delete("/:lessonId", protect, isAdmin, deleteLesson);
 
 module.exports = router;
