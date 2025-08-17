@@ -1,31 +1,3 @@
-// // Custom error handler
-// const errorHandler = (err, req, res, next) => {
-//   console.error(err.stack); // log the error for debugging
-
-//   // Default values
-//   let statusCode = err.statusCode || 500;
-//   let message = err.message || "Internal Server Error";
-
-//   // Sequelize validation errors
-//   if (err.name === "SequelizeValidationError") {
-//     statusCode = 400;
-//     message = err.errors.map((e) => e.message).join(", ");
-//   }
-
-//   // Sequelize unique constraint error
-//   if (err.name === "SequelizeUniqueConstraintError") {
-//     statusCode = 400;
-//     message = "Duplicate entry: " + err.errors.map((e) => e.message).join(", ");
-//   }
-
-//   res.status(statusCode).json({
-//     success: false,
-//     message,
-//   });
-// };
-
-// module.exports = errorHandler;
-
 // Custom error handler
 const errorHandler = (err, req, res, next) => {
   console.error(err.stack); // log the error for debugging
