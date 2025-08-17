@@ -4,7 +4,8 @@ const cors = require("cors");
 const sequelize = require("./config/database");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./docs/swagger"); // Import Swagger config
-const routes = require("./routes"); // ⬅️ Import centralized routes
+const routes = require("./routes"); //  Import centralized routes
+const errorHandler = require("./middlewares/errorHandler"); //  import error handler
 
 const app = express();
 
@@ -31,5 +32,8 @@ sequelize
   .catch((error) => {
     console.error("Unable to connect to the database:", error);
   });
+
+// Error handler last middleware
+app.use(errorHandler);
 
 module.exports = app;
