@@ -7,7 +7,10 @@ exports.getLessonsForCourse = async (req, res, next) => {
     // Ensure the course exists (optional but clearer errors)
     const course = await Course.findByPk(courseId);
     if (!course) {
-      return res.status(404).json({ message: "Course Not found" });
+      // return res.status(404).json({ message: "Course Not found" });
+      const error = new Error("Course not found!!!");
+      error.statusCode = 404;
+      throw error;
     }
 
     const lessons = await Lesson.findAll({
@@ -33,7 +36,10 @@ exports.getLessonById = async (req, res, next) => {
     });
 
     if (!lesson) {
-      return res.status(404).json({ message: "Lesson not found" });
+      // return res.status(404).json({ message: "Lesson not found" });
+      const error = new Error("Lesson not found!!!");
+      error.statusCode = 404;
+      throw error;
     }
 
     res.json(lesson);
@@ -42,7 +48,7 @@ exports.getLessonById = async (req, res, next) => {
   }
 };
 
-exports.createLesson = async (req, res) => {
+exports.createLesson = async (req, res, next) => {
   try {
     const { courseId } = req.params;
     const { title, content, order } = req.body;
@@ -50,7 +56,10 @@ exports.createLesson = async (req, res) => {
     // Check if course exists
     const course = await Course.findByPk(courseId);
     if (!course) {
-      return res.status(404).json({ error: "Course not found" });
+      // return res.status(404).json({ error: "Course not found" });
+      const error = new Error("Course not found!!!");
+      error.statusCode = 404;
+      throw error;
     }
 
     // Create the lesson
@@ -66,8 +75,9 @@ exports.createLesson = async (req, res) => {
       lesson,
     });
   } catch (error) {
-    console.error("Error creating lesson:", error);
-    res.status(500).json({ error: "Internal server error" });
+    // console.error("Error creating lesson:", error);
+    // res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 };
 
@@ -75,7 +85,7 @@ exports.createLesson = async (req, res) => {
 // @route   PUT /courses/:courseId/lessons/:lessonId
 // @access  Private/Admin
 
-exports.updateLesson = async (req, res) => {
+exports.updateLesson = async (req, res, next) => {
   try {
     const { courseId, lessonId } = req.params;
     const { title, content, order } = req.body;
@@ -85,7 +95,10 @@ exports.updateLesson = async (req, res) => {
     });
 
     if (!lesson) {
-      return res.status(404).json({ message: "Lesson not found" });
+      // return res.status(404).json({ message: "Lesson not found" });
+      const error = new Error("Lesson not found!!!");
+      error.statusCode = 404;
+      throw error;
     }
 
     //update fields if provided
@@ -96,8 +109,9 @@ exports.updateLesson = async (req, res) => {
     await lesson.save();
     res.status(201).json({ message: "Lesson updated successfully", lesson });
   } catch (error) {
-    console.error("Error updating lesson:", error);
-    res.status(500).json({ error: "Internal server error" });
+    // console.error("Error updating lesson:", error);
+    // res.status(500).json({ error: "Internal server error" });
+    next(error);
   }
 };
 
@@ -110,7 +124,10 @@ exports.deleteLesson = async (req, res, next) => {
     });
 
     if (!lesson) {
-      res.status(404).json({ message: "Lesson not found" });
+      // res.status(404).json({ message: "Lesson not found" });
+      const error = new Error("Lesson not found!!!");
+      error.statusCode = 404;
+      throw error;
     }
 
     await lesson.destroy();
