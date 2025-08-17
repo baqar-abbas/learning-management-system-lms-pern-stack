@@ -71,6 +71,36 @@ exports.createLesson = async (req, res) => {
   }
 };
 
+// @desc    Update a lesson by ID
+// @route   PUT /courses/:courseId/lessons/:lessonId
+// @access  Private/Admin
+
+exports.updateLesson = async (req, res) => {
+  try {
+    const { courseId, lessonId } = req.params;
+    const { title, content, order } = req.body;
+
+    const lesson = await Lesson.findOne({
+      where: { id: lessonId, courseId },
+    });
+
+    if (!lesson) {
+      return res.status(404).json({ message: "Lesson not found" });
+    }
+
+    //update fields if provided
+    lesson.title = title || lesson.title;
+    lesson.content = content || lesson.content;
+    lesson.order = order || lesson.order;
+
+    await lesson.save();
+    res.status(201).json({ message: "Lesson updated successfully", lesson });
+  } catch (error) {
+    console.error("Error updating lesson:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 exports.deleteLesson = async (req, res, next) => {
   try {
     const { courseId, lessonId } = req.params;
