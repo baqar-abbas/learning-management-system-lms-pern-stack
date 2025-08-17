@@ -6,6 +6,7 @@ const {
   getLessonsForCourse,
   getLessonById,
   deleteLesson,
+  updateLesson,
 } = require("../controllers/lessonController");
 const { validateLesson } = require("../middlewares/validateLesson");
 const validateRequest = require("../middlewares/validateRequest");
@@ -134,6 +135,69 @@ router.post(
   validateRequest,
   createLesson
 );
+
+/**
+ * @swagger
+ * /courses/{courseId}/lessons/{lessonId}:
+ *   put:
+ *     summary: Update a lesson by ID
+ *     description: Only admins can update lesson details (title, content, order).
+ *     tags: [Lessons]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: courseId
+ *         required: true
+ *         description: ID of the course containing the lesson
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *       - in: path
+ *         name: lessonId
+ *         required: true
+ *         description: ID of the lesson to update
+ *         schema:
+ *           type: integer
+ *           example: 2
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: Updated Lesson Title
+ *               content:
+ *                 type: string
+ *                 example: Updated lesson content here...
+ *               order:
+ *                 type: integer
+ *                 example: 3
+ *     responses:
+ *       200:
+ *         description: Lesson updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Lesson updated successfully
+ *                 lesson:
+ *                   $ref: '#/components/schemas/Lesson'
+ *       404:
+ *         description: Lesson not found
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden (Admin only)
+ */
+
+router.put("/:lessonId", protect, isAdmin, updateLesson);
 
 /**
  * @swagger
