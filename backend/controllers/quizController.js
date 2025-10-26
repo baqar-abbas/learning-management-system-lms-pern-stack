@@ -1,4 +1,3 @@
-const { where } = require("sequelize");
 const { Quiz, Lesson } = require("../models");
 
 exports.getQuizzesForLesson = async (req, res, next) => {
