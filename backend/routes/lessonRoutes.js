@@ -12,6 +12,8 @@ const { validateLesson } = require("../middlewares/validateLesson");
 const validateRequest = require("../middlewares/validateRequest");
 const { param } = require("express-validator");
 
+const quizRoutes = require("./quizRoutes");
+
 /**
  * @swagger
  * /courses/{courseId}/lessons:
@@ -243,5 +245,8 @@ router.put("/:lessonId", protect, isAdmin, updateLesson);
  */
 
 router.delete("/:lessonId", protect, isAdmin, deleteLesson);
+
+// Mount quizzes under lessons
+router.use("/:lessonId/quizzes", quizRoutes);
 
 module.exports = router;
