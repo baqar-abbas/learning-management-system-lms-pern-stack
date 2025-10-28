@@ -54,3 +54,25 @@ exports.createOption = async (req, res, next) => {
     next(error);
   }
 };
+
+// Update an option
+exports.updateOption = async (req, res, next) => {
+  try {
+    const { quizId, optionId } = req.params;
+    const { text, isCorrect } = req.body;
+
+    const option = await Option.findOne({ where: { id: optionId, quizId } });
+    if (!option) {
+      return res.status(404).json({ message: "Option not found" });
+    }
+
+    option.text = text ?? option.text;
+    option.isCorrect = isCorrect ?? option.isCorrect;
+
+    await option.save();
+
+    res.status(200).json(option);
+  } catch (error) {
+    next(error);
+  }
+};
