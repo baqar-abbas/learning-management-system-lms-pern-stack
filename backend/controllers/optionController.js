@@ -76,3 +76,20 @@ exports.updateOption = async (req, res, next) => {
     next(error);
   }
 };
+
+// Delete an option
+exports.deleteOption = async (req, res, next) => {
+  try {
+    const { quizId, optionId } = req.params;
+
+    const option = await Option.findOne({ where: { id: optionId, quizId } });
+    if (!option) {
+      return res.status(404).json({ message: "Option not found" });
+    }
+
+    await option.destroy();
+    res.status(200).json({ message: "Option deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
