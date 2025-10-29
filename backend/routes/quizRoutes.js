@@ -9,6 +9,8 @@ const {
 } = require("../controllers/quizController");
 const { protect, isAdmin } = require("../middlewares/authMiddleware");
 
+const optionRoutes = require("./optionRoutes");
+
 /**
  * @swagger
  * tags:
@@ -183,5 +185,8 @@ router.put("/:quizId", protect, isAdmin, updateQuiz);
  *         description: Quiz not found
  */
 router.delete("/:quizId", protect, isAdmin, deleteQuiz);
+
+// Mount option routes
+router.use("/:quizId/options", optionRoutes);
 
 module.exports = router;
