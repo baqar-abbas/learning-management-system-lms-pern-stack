@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
-import {
+const {
   getOptions,
   getOptionById,
   createOption,
   updateOption,
   deleteOption,
-} from "../controllers/optionController";
-const { protect, isAdmin } = require("../middleware/authMiddleware");
+} = require("../controllers/optionController");
+const { protect, isAdmin } = require("../middlewares/authMiddleware");
 
 /**
  * @swagger
