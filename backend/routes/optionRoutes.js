@@ -1,56 +1,27 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
-const {
-  getQuizzesForLesson,
-  getQuizById,
-  createQuiz,
-  updateQuiz,
-  deleteQuiz,
-} = require("../controllers/quizController");
-const { protect, isAdmin } = require("../middlewares/authMiddleware");
-
-const optionRoutes = require("./optionRoutes");
+import {
+  getOptions,
+  getOptionById,
+  createOption,
+  updateOption,
+  deleteOption,
+} from "../controllers/optionController";
+const { protect, isAdmin } = require("../middleware/authMiddleware");
 
 /**
  * @swagger
  * tags:
- *   name: Quizzes
- *   description: Quiz management for lessons
+ *   name: Options
+ *   description: Manage options for a specific quiz
  */
 
 /**
  * @swagger
- * /courses/{courseId}/lessons/{lessonId}/quizzes:
+ * /courses/{courseId}/lessons/{lessonId}/quizzes/{quizId}/options:
  *   get:
- *     summary: Get all quizzes for a specific lesson
- *     tags: [Quizzes]
- *     parameters:
- *       - in: path
- *         name: courseId
- *         required: true
- *         schema:
- *           type: integer
- *         description: Course ID
- *       - in: path
- *         name: lessonId
- *         required: true
- *         schema:
- *           type: integer
- *         description: Lesson ID
- *     responses:
- *       200:
- *         description: List of quizzes retrieved successfully
- *       404:
- *         description: Lesson not found
- */
-router.get("/", protect, getQuizzesForLesson);
-
-/**
- * @swagger
- * /courses/{courseId}/lessons/{lessonId}/quizzes/{quizId}:
- *   get:
- *     summary: Get a quiz by ID
- *     tags: [Quizzes]
+ *     summary: Get all options for a specific quiz
+ *     tags: [Options]
  *     parameters:
  *       - in: path
  *         name: courseId
@@ -69,18 +40,53 @@ router.get("/", protect, getQuizzesForLesson);
  *           type: integer
  *     responses:
  *       200:
- *         description: Quiz details retrieved successfully
+ *         description: List of options retrieved successfully
  *       404:
  *         description: Quiz not found
  */
-router.get("/:quizId", protect, getQuizById);
+router.get("/", protect, getOptions);
 
 /**
  * @swagger
- * /courses/{courseId}/lessons/{lessonId}/quizzes:
+ * /courses/{courseId}/lessons/{lessonId}/quizzes/{quizId}/options/{optionId}:
+ *   get:
+ *     summary: Get an option by ID
+ *     tags: [Options]
+ *     parameters:
+ *       - in: path
+ *         name: courseId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: lessonId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: quizId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: optionId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Option retrieved successfully
+ *       404:
+ *         description: Option not found
+ */
+router.get("/:optionId", protect, getOptionById);
+
+/**
+ * @swagger
+ * /courses/{courseId}/lessons/{lessonId}/quizzes/{quizId}/options:
  *   post:
- *     summary: Create a new quiz for a lesson
- *     tags: [Quizzes]
+ *     summary: Create a new option for a quiz
+ *     tags: [Options]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -94,6 +100,11 @@ router.get("/:quizId", protect, getQuizById);
  *         required: true
  *         schema:
  *           type: integer
+ *       - in: path
+ *         name: quizId
+ *         required: true
+ *         schema:
+ *           type: integer
  *     requestBody:
  *       required: true
  *       content:
@@ -101,23 +112,26 @@ router.get("/:quizId", protect, getQuizById);
  *           schema:
  *             type: object
  *             properties:
- *               question:
+ *               text:
  *                 type: string
- *                 example: What is React?
+ *                 example: "React is a frontend library"
+ *               isCorrect:
+ *                 type: boolean
+ *                 example: true
  *     responses:
  *       201:
- *         description: Quiz created successfully
+ *         description: Option created successfully
  *       404:
- *         description: Lesson not found
+ *         description: Quiz not found
  */
-router.post("/", protect, isAdmin, createQuiz);
+router.post("/", protect, isAdmin, createOption);
 
 /**
  * @swagger
- * /courses/{courseId}/lessons/{lessonId}/quizzes/{quizId}:
+ * /courses/{courseId}/lessons/{lessonId}/quizzes/{quizId}/options/{optionId}:
  *   put:
- *     summary: Update a quiz
- *     tags: [Quizzes]
+ *     summary: Update an option
+ *     tags: [Options]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -133,6 +147,11 @@ router.post("/", protect, isAdmin, createQuiz);
  *           type: integer
  *       - in: path
  *         name: quizId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: optionId
  *         required: true
  *         schema:
  *           type: integer
@@ -143,23 +162,26 @@ router.post("/", protect, isAdmin, createQuiz);
  *           schema:
  *             type: object
  *             properties:
- *               question:
+ *               text:
  *                 type: string
- *                 example: Updated quiz question
+ *                 example: "Updated option text"
+ *               isCorrect:
+ *                 type: boolean
+ *                 example: false
  *     responses:
  *       200:
- *         description: Quiz updated successfully
+ *         description: Option updated successfully
  *       404:
- *         description: Quiz not found
+ *         description: Option not found
  */
-router.put("/:quizId", protect, isAdmin, updateQuiz);
+router.put("/:optionId", protect, isAdmin, updateOption);
 
 /**
  * @swagger
- * /courses/{courseId}/lessons/{lessonId}/quizzes/{quizId}:
+ * /courses/{courseId}/lessons/{lessonId}/quizzes/{quizId}/options/{optionId}:
  *   delete:
- *     summary: Delete a quiz
- *     tags: [Quizzes]
+ *     summary: Delete an option
+ *     tags: [Options]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -178,15 +200,17 @@ router.put("/:quizId", protect, isAdmin, updateQuiz);
  *         required: true
  *         schema:
  *           type: integer
+ *       - in: path
+ *         name: optionId
+ *         required: true
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
- *         description: Quiz deleted successfully
+ *         description: Option deleted successfully
  *       404:
- *         description: Quiz not found
+ *         description: Option not found
  */
-router.delete("/:quizId", protect, isAdmin, deleteQuiz);
-
-// Mount option routes
-router.use("/:quizId/options", optionRoutes);
+router.delete("/:optionId", protect, isAdmin, deleteOption);
 
 module.exports = router;
