@@ -90,3 +90,19 @@ exports.updateProgress = async (req, res, next) => {
     next(error);
   }
 };
+
+// Delete progress record (Admin only)
+exports.deleteProgress = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const deleted = await UserProgress.destroy({ where: { id } });
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Progress record not found." });
+    }
+
+    res.status(200).json({ message: "Progress record deleted successfully." });
+  } catch (error) {
+    next(error);
+  }
+};
