@@ -29,3 +29,35 @@ exports.getMyProgress = async (req, res, next) => {
     next(error);
   }
 };
+
+// Mark a lesson as completed for the logged-in user
+exports.markLessonCompleted = async (req, res, next) => {
+  try {
+    const { lessonId } = req.params;
+
+    // Check if already completed
+    const existing = await UserProgress.findOne({
+      where: { userId: req.user.id, lessonId },
+    });
+
+    if (existing) {
+      return res
+        .status(400)
+        .json({ message: "Lesson already marked as completed." });
+    }
+
+    const progress = await UserProgress.create({
+      userId: req.user.id,
+      lessonId,
+      isCompleted: true,
+      completedAt: new Date(),
+    });
+
+    res.status(201).json({
+      message: "Lesson marked as completed!",
+      progress,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
