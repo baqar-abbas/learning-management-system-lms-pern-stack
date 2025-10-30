@@ -61,3 +61,32 @@ exports.markLessonCompleted = async (req, res, next) => {
     next(error);
   }
 };
+
+// Update progress (toggle complete/incomplete)
+exports.updateProgress = async (req, res, next) => {
+  try {
+    const { lessonId } = req.params;
+    const { isCompleted } = req.body;
+
+    const progress = await UserProgress.findOne({
+      where: { userId: req.user.id, lessonId },
+    });
+
+    if (!progress) {
+      return res
+        .status(404)
+        .json({ message: "Progress not found for this lesson." });
+    }
+
+    progress.isCompleted = isCompleted;
+    progress.completedAt = isCompleted ? new Date() : null;
+    await progress.save();
+
+    res.status(200).json({
+      message: "Progress updated successfully.",
+      progress,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
