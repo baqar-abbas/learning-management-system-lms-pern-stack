@@ -10,6 +10,7 @@ const validateRegister = [
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters long"),
   body("role")
+    .optional() // makes it optional
     .isIn(["student", "admin"])
     .withMessage("Role must be either student or admin"),
   (req, res, next) => {
