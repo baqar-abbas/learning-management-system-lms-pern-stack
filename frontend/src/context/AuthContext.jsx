@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
     if (typeof window !== "undefined") return localStorage.getItem("token");
     return null;
   });
-  const { loading, setLoading } = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // load user if token exists
@@ -20,8 +20,8 @@ export const AuthProvider = ({ children }) => {
           // set token in localStorage (already done on login)
           localStorage.setItem("token", token);
           // fetch /auth/me
-          const data = await api.get("/auth/me");
-          setUser(data);
+          const response = await api.get("/auth/me");
+          setUser(response.data);
         } catch (err) {
           console.error("Failed to fetch user:", err);
           setUser(null);
