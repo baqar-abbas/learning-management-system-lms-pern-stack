@@ -15,6 +15,13 @@ const registerUser = async (req, res, next) => {
   try {
     const { name, email, password, role } = req.body;
 
+    // Validate required fields
+    if (!name || !email || !password) {
+      const error = new Error("Please provide name, email and password");
+      error.statusCode = 400;
+      throw error;
+    }
+
     // Check if user already exists
     const existingUser = await User.findOne({ where: { email } });
     // Implement Centralized error handling in authController using error handler middlware
@@ -28,12 +35,17 @@ const registerUser = async (req, res, next) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Default role assignment logic
+    // If role is not provided → assign "student"
+    // Prevent API users from registering directly as admin (safety)
+    const assignedRole = role && role === "admin" ? "admin" : "student";
+
     // Create new user
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      role: role || "student",
+      role: assignedRole,
     });
 
     // Respond with token and user info
