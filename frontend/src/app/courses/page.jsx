@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import api from "../../lib/api";
 import Link from "next/link";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState([]);
@@ -45,27 +46,29 @@ export default function CoursesPage() {
     return <div className="p-6 text-gray-600">No courses found.</div>;
 
   return (
-    <div className="p-6 grid gap-4">
-      <h1 className="text-2xl font-semibold">Courses</h1>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {courses.map((c) => (
-          <div
-            key={c.id}
-            className="border p-4 rounded shadow-sm hover:shadow-md transition"
-          >
-            <h2 className="font-semibold">{c.title}</h2>
-            <p className="text-sm my-2 text-gray-700">{c.description}</p>
-            <div className="flex gap-2 mt-2">
-              <Link
-                href={`/courses/${c.id}`}
-                className="text-blue-600 hover:underline"
-              >
-                Open
-              </Link>
+    <ProtectedRoute>
+      <div className="p-6 grid gap-4">
+        <h1 className="text-2xl font-semibold">Courses</h1>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {courses.map((c) => (
+            <div
+              key={c.id}
+              className="border p-4 rounded shadow-sm hover:shadow-md transition"
+            >
+              <h2 className="font-semibold">{c.title}</h2>
+              <p className="text-sm my-2 text-gray-700">{c.description}</p>
+              <div className="flex gap-2 mt-2">
+                <Link
+                  href={`/courses/${c.id}`}
+                  className="text-blue-600 hover:underline"
+                >
+                  Open
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }
