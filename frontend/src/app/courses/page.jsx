@@ -13,9 +13,6 @@ export default function CoursesPage() {
   useEffect(() => {
     const loadCourses = async () => {
       try {
-        setLoading(true);
-        setError(null);
-
         const { data } = await api.get("/courses");
         setCourses(data);
       } catch (err) {
@@ -32,37 +29,40 @@ export default function CoursesPage() {
     loadCourses();
   }, []);
 
-  if (loading) return <div className="p-6 text-gray-600">Loading...</div>;
-
-  if (error)
-    return (
-      <div className="p-6 text-red-600">
-        <p className="font-semibold">Error:</p>
-        <p>{error}</p>
-      </div>
-    );
-
-  if (!courses.length)
-    return <div className="p-6 text-gray-600">No courses found.</div>;
-
   return (
     <ProtectedRoute>
-      <div className="p-6 grid gap-4">
-        <h1 className="text-2xl font-semibold">Courses</h1>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {courses.map((c) => (
+      <div className="min-h-screen px-6 py-8">
+        <h1 className="text-3xl font-semibold mb-6">Browse Courses</h1>
+
+        {loading && <p className="text-gray-500 text-lg">Loading courses...</p>}
+
+        {error && <p className="text-red-600 font-medium">{error}</p>}
+
+        {!loading && !error && courses.length === 0 && (
+          <p className="text-gray-600">No courses available.</p>
+        )}
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {courses.map((course) => (
             <div
-              key={c.id}
-              className="border p-4 rounded shadow-sm hover:shadow-md transition"
+              key={course.id}
+              className="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition transform hover:-translate-y-1 p-5 border dark:border-gray-700"
             >
-              <h2 className="font-semibold">{c.title}</h2>
-              <p className="text-sm my-2 text-gray-700">{c.description}</p>
-              <div className="flex gap-2 mt-2">
+              <h2 className="text-lg font-semibold">{course.title}</h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 line-clamp-3">
+                {course.description}
+              </p>
+
+              <div className="mt-4 flex justify-between items-center">
+                <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300">
+                  Published
+                </span>
+
                 <Link
-                  href={`/courses/${c.id}`}
-                  className="text-blue-600 hover:underline"
+                  href={`/courses/${course.id}`}
+                  className="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded transition"
                 >
-                  Open
+                  View Course
                 </Link>
               </div>
             </div>
