@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import api from "../../lib/api";
 import Link from "next/link";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import ProtectedRoute from "../../components/ProtectedRoute";
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState([]);
