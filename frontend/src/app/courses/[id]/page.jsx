@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import api from "../../../lib/api";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import ProtectedRoute from "../../../components/ProtectedRoute";
 import Link from "next/link";
 
 export default function CourseDetailsPage() {
