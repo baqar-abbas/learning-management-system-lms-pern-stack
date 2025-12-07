@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import api from "../../../../../lib/api";
-import ProtectedRoute from "../../../../../components/ProtectedRoute";
+import api from "@/lib/api";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function LessonPage() {
   const { id: courseId, lessonId } = useParams();
