@@ -10,6 +10,7 @@ export default function LessonPage() {
   const router = useRouter();
 
   const [lesson, setLesson] = useState(null);
+  const [lessons, setLessons] = useState([]);
   const [completedLessons, setCompletedLessons] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,12 +21,15 @@ export default function LessonPage() {
 
     const loadLesson = async () => {
       try {
-        const [lessonRes, progressRes] = await Promise.all([
+        const [lessonRes, lessonsRes, progressRes] = await Promise.all([
           api.get(`/courses/${courseId}/lessons/${lessonId}`),
+          api.get(`/courses/${courseId}/lessons`),
           api.get(`/progress/my`),
         ]);
         setLesson(lessonRes.data);
         // console.log("Lesson data:", lessonRes.data);
+        setLessons(lessonsRes.data);
+        console.log("All lessons:", lessonsRes.data);
         setCompletedLessons(new Set(progressRes.data.map((p) => p.lessonId)));
         // console.log("Completed lessons:", progressRes.data);
       } catch (err) {
@@ -42,6 +46,13 @@ export default function LessonPage() {
   }, [courseId, lessonId]);
 
   const isCompleted = completedLessons.has(Number(lessonId));
+
+  const currentIndex = lessons.findIndex((l) => l.id === Number(lessonId));
+
+  const prevLesson = currentIndex > 0 ? lessons[currentIndex - 1] : null;
+
+  const nextLesson =
+    currentIndex < lessons.length - 1 ? lessons[currentIndex + 1] : null;
 
   const markCompleted = async () => {
     try {
@@ -109,6 +120,37 @@ export default function LessonPage() {
             {marking ? "Marking..." : "Mark as Completed"}
           </button>
         )}
+
+        {/* Lesson Navigation */}
+        <div className="mt-10 flex justify-between items-center">
+          {/* Previous */}
+          {prevLesson ? (
+            <button
+              onClick={() =>
+                router.push(`/courses/${courseId}/lessons/${prevLesson.id}`)
+              }
+              className="text-blue-600 hover:underline"
+            >
+              ← {prevLesson.title}
+            </button>
+          ) : (
+            <span className="text-gray-400">← Previous</span>
+          )}
+
+          {/* Next */}
+          {nextLesson ? (
+            <button
+              onClick={() =>
+                router.push(`/courses/${courseId}/lessons/${nextLesson.id}`)
+              }
+              className="text-blue-600 hover:underline"
+            >
+              {nextLesson.title} →
+            </button>
+          ) : (
+            <span className="text-gray-400">Next →</span>
+          )}
+        </div>
       </div>
     </ProtectedRoute>
   );
