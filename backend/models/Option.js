@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
   // Define associations
   Option.associate = (models) => {
     Option.belongsTo(models.Quiz, {
+      as: "quiz",
       foreignKey: "quizId",
       onDelete: "CASCADE",
     });

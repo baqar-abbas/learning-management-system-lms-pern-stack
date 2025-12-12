@@ -25,7 +25,9 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: "CASCADE",
     });
 
+    // Alias options for consistent includes (frontend expects quiz.options)
     Quiz.hasMany(models.Option, {
+      as: "options",
       foreignKey: "quizId",
       onDelete: "CASCADE",
     });

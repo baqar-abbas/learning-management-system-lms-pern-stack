@@ -121,6 +121,18 @@ export default function LessonPage() {
           </button>
         )}
 
+        {/* Quiz Button */}
+        <div className="mt-6">
+          <button
+            onClick={() =>
+              router.push(`/courses/${courseId}/lessons/${lessonId}/quiz`)
+            }
+            className="px-6 py-2 rounded bg-purple-600 text-white hover:bg-purple-700 transition"
+          >
+            Take Quiz
+          </button>
+        </div>
+
         {/* Lesson Navigation */}
         <div className="mt-10 flex justify-between items-center">
           {/* Previous */}

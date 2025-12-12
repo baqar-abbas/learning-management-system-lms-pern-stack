@@ -14,7 +14,11 @@ exports.getQuizzesForLesson = async (req, res, next) => {
 
     const quizzes = await Quiz.findAll({
       where: { lessonId },
-      order: [["id", "ASC"]],
+      include: [{ model: Option, as: "options" }],
+      order: [
+        ["id", "ASC"],
+        [{ model: Option, as: "options" }, "id", "ASC"],
+      ],
     });
 
     res.status(200).json(quizzes);
@@ -29,6 +33,8 @@ exports.getQuizById = async (req, res, next) => {
 
     const quiz = await Quiz.findOne({
       where: { id: quizId, lessonId },
+      include: [{ model: Option, as: "options" }],
+      order: [[{ model: Option, as: "options" }, "id", "ASC"]],
     });
 
     if (!quiz) {
