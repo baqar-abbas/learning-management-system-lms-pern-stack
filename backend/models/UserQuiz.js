@@ -44,3 +44,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 };
+
+UserQuiz.associate = (models) => {
+  UserQuiz.belongsTo(models.User, {
+    foreignKey: "userId",
+    onDelete: "CASCADE",
+  });
+  UserQuiz.belongsTo(models.Quiz, {
+    foreignKey: "quizId",
+    onDelete: "CASCADE",
+  });
+};
