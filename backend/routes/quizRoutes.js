@@ -6,6 +6,7 @@ const {
   createQuiz,
   updateQuiz,
   deleteQuiz,
+  submitQuiz,
 } = require("../controllers/quizController");
 const { protect, isAdmin } = require("../middlewares/authMiddleware");
 
@@ -185,6 +186,52 @@ router.put("/:quizId", protect, isAdmin, updateQuiz);
  *         description: Quiz not found
  */
 router.delete("/:quizId", protect, isAdmin, deleteQuiz);
+
+/**
+ * @swagger
+ * /courses/{courseId}/lessons/{lessonId}/quizzes/{quizId}/submit:
+ *   post:
+ *     summary: Submit answers for a quiz
+ *     tags: [Quizzes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: courseId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: lessonId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: quizId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               selectedOptionIds:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 example: [1]
+ *     responses:
+ *       201:
+ *         description: Quiz submission stored with score and pass/fail
+ *       400:
+ *         description: Invalid input
+ *       404:
+ *         description: Quiz or lesson not found
+ */
+router.post("/:quizId/submit", protect, submitQuiz);
 
 // Mount option routes
 router.use("/:quizId/options", optionRoutes);

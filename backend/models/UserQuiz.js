@@ -43,15 +43,17 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: true,
     }
   );
-};
 
-UserQuiz.associate = (models) => {
-  UserQuiz.belongsTo(models.User, {
-    foreignKey: "userId",
-    onDelete: "CASCADE",
-  });
-  UserQuiz.belongsTo(models.Quiz, {
-    foreignKey: "quizId",
-    onDelete: "CASCADE",
-  });
+  UserQuiz.associate = (models) => {
+    UserQuiz.belongsTo(models.User, {
+      foreignKey: "userId",
+      onDelete: "CASCADE",
+    });
+    UserQuiz.belongsTo(models.Quiz, {
+      foreignKey: "quizId",
+      onDelete: "CASCADE",
+    });
+  };
+
+  return UserQuiz;
 };
