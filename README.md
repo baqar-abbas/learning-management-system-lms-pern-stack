@@ -94,7 +94,7 @@ node .\seeders\seedCourses.js
   - `UserQuiz` stores attempts `{ score, total, passed, answers[] }`.
 - Quiz endpoints include options so the frontend can render `quiz.options`.
 
-## API Overview (excerpt)
+## API Overview (Backend Highlights)
 
 - `GET /api/courses` – list courses
 - `GET /api/courses/:courseId/lessons` – list lessons for a course
