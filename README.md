@@ -1,5 +1,9 @@
 # Learning Management System (LMS)
 
+> **⚠️ BETA / ACTIVE DEVELOPMENT**
+>
+> This project is currently in **active development** and should be considered a **beta version**. Significant features, UI improvements, and architectural refinements are still in progress. The application is **not production-ready** at this time. Expect breaking changes, UI redesigns, and ongoing development work.
+
 A full‑stack LMS for delivering courses, lessons, and quizzes. The project is split into a Next.js frontend and a Node.js/Express backend with Sequelize ORM.
 
 **Highlights**
@@ -108,6 +112,16 @@ node .\seeders\seedCourses.js
 - Multiple lockfiles warning: remove `frontend/package-lock.json` if you see Next.js warning about multiple lockfiles.
 - Quiz options not showing: ensure models use alias `Quiz.hasMany(Option, { as: "options" })` and controllers include `{ model: Option, as: "options" }`.
 - 500 on pages due to `@/` imports: configure `frontend/jsconfig.json` with `"baseUrl": "."` and `"paths": { "@/*": ["./src/*"] }`.
+
+## Known Limitations & Work in Progress
+
+- **UI/UX**: The interface is functional but undergoing continuous design improvements and refinements.
+- **Responsive design**: Mobile and tablet responsiveness enhancements are in progress.
+- **Performance optimization**: Query optimization, caching strategies, and loading time improvements are planned.
+- **Error handling & user feedback**: Additional error scenarios and user-facing feedback improvements are being implemented.
+- **Test coverage**: Comprehensive unit and integration tests are not yet in place; test automation is planned for Phase 2.
+- **Documentation**: API documentation and developer guides will be expanded.
+- **Email notifications**: Email verification, password reset, and course enrollment notifications are planned features.
 
 ## Roadmap – Phase 2: Admin Dashboard
 
